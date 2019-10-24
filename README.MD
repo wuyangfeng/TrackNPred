@@ -1,4 +1,4 @@
-# TrackNPred: A Software Framework for End-to-End Trajectory Prediction
+# Track_N_Pred: A Software Framework for End-to-End Trajectory Prediction
 
 This is the code base for our ACM CSCS 2019 paper,
 
