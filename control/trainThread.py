@@ -47,18 +47,21 @@ class TrainThread(QThread):
     def detect(self, args):
 
         self.signalCanvas("\n[INFO] Detection started...")
-
+        
+        ## Get arguments
         dataDir = args["dir"]
         conf = args["detConf"]
         nms = args["NMS"]
 
         nfolders = len(os.listdir(dataDir))
 
+        ## Determine method for detection
         if args["detection"] == "YOLO":
             self.signalCanvas("\n[INFO] Using YOLO for detection")
         elif args["detection"] == "MASK":
             self.signalCanvas("\n[INFO] Using MASK for detection")
 
+        ## Detection loop over all data folders in the data directory
         for i, data_folder in enumerate(os.listdir(dataDir)):
             input_dir = os.path.join(dataDir, data_folder)
             outputPath = os.path.join(input_dir, "det.txt")
@@ -70,12 +73,19 @@ class TrainThread(QThread):
                 self.signalCanvas("\n[INFO]: Detection file (det.txt) found at {}. Delete this file to perform detection for {}".format(outputPath, data_folder))
 
             else:
-                input_file = "{}.mp4".format(data_folder)
-                frames = args["frames"]
+                ## define input video
+                input_file = "{}.mp4".format(data_folder) 
+                ## define raw frames folder
+                frames = args["frames"] 
+                ## define output labeled frames folder
                 outputFolder = os.path.join(input_dir, "detectedFrames")
+                ## make directory for output labeled frames
                 os.makedirs(outputFolder, exist_ok=True)
 
                 #    self.updateTopBar(5)
+
+
+                ## Run detection
                 if args["detection"] == "YOLO":
                     self.model.YOLO_detect(input_dir, input_file, frames, "det.txt", "detectedFrames", conf, nms, args["cuda"], self)
                 elif args["detection"] == "MASK":
@@ -89,8 +99,10 @@ class TrainThread(QThread):
         nfolders = len(os.listdir(dataDir))
 
         for i, data_folder in enumerate(os.listdir(dataDir)):
-            self.signalBotLabel("Tracking: {}/{} folders".format(max(i, 1), nfolders))
+            self.signalBotLabel("Tracking: {}/{} datasets".format(max(i, 1), nfolders))
             self.signalBotBar(int(i + 1 / nfolders * 100))
+
+            ## Run tracking
             self.model.tracking(dataDir, data_folder, thread=self)
 
         self.signalCanvas("\n[INFO] Tracking finished")
@@ -100,6 +112,7 @@ class TrainThread(QThread):
         dataDir = args["dir"]
         print("DATADIR: ", dataDir)
         # nfolders = len(os.listdir(dataDir))
+ 
         file_names = []
         for i, data_folder in enumerate(os.listdir(dataDir)):
             self.model.format(dataDir, data_folder, self)
@@ -109,6 +122,8 @@ class TrainThread(QThread):
         train_data_dir = "model/Prediction/data/{}".format(dataDir.split('/')[2])
         os.makedirs(train_data_dir, exist_ok=True)
         print("train data dir: ", train_data_dir)
+
+##???        
         train_data_dir = train_data_dir + "/{}"
         merge_n_split(file_names, train_data_dir)
 

@@ -43,8 +43,11 @@ def create_frames(inputDir, inputFile, framesDir):
 
 def detect(inputDir, inputFile, framesDir, outputTxt, outputFolder, conf, nms, cuda, thread=None):
 
+    ## Determine device (cuda or cpu)
     device = torch.device("cuda" if cuda and torch.cuda.is_available() else "cpu")
+    
     print("loading model...")
+
     model = Darknet("./resources/yolo-coco/yolov3.cfg").to(device)
     model.load_darknet_weights("./resources/yolo-coco/yolov3.weights")
     model.eval()
@@ -134,6 +137,7 @@ def detect(inputDir, inputFile, framesDir, outputTxt, outputFolder, conf, nms, c
     detfile = os.path.join(inputDir, outputTxt)
 
     if thread:
+
         thread.signalCanvas("\n[INFO]: Detection done.")
         thread.signalCanvas("\n[INFO]: Saving results...")
 

@@ -9,13 +9,18 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     Dialog = QtWidgets.QDialog()
 
-    controller = Controller()
-    view = TrackNPredView()
+
+    view = TrackNPredView() ## Define view
+    controller = Controller() ## Define controller
+    
     ## to get attributes
-    view.setupUi(Dialog)
-    model = TnpModel(controller)
+    ## Setup the UI of the Dialog using the Class TrackNPredView
+    view.setupUi(Dialog) 
     controller.setView(view)
-    controller.setModel(model)
+
+    ##- Set the model using Class Controller
+    model = TnpModel(controller) ## model = TnpModel(Controller()) - Select the model
+    controller.setModel(model) ## controller.setModel(TnpMdel(Controller())) - Set the model
 
     #show ui
     Dialog.show()
