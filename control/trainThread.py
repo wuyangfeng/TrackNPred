@@ -94,6 +94,7 @@ class TrainThread(QThread):
         self.signalCanvas("\n[INFO] Detection finished")
 
     def track(self, args):
+
         self.signalCanvas("\n[INFO] Tracking started...")
         dataDir = args["dir"]
         nfolders = len(os.listdir(dataDir))
@@ -136,14 +137,26 @@ class TrainThread(QThread):
                 self.signalBotBar(0)
                 self.signalTopBar(0)
                 self.detect(self.args)
+                
+
                 self.signalBotBar(0)
                 self.signalTopBar(0)
                 self.track(self.args)
+
+ 
+
+
             if self.args['predictionFlag']:
                 self.format(self.args)
+
+
                 self.signalBotBar(0)
                 self.signalTopBar(0)
                 self.model.train(self.args, self)
+
+
+
+
                 self.signalCanvas("\n[INFO] Done Training!\n")
             if self.args['evaluationFlag']:
                 self.signalBotBar(0)
